@@ -1,0 +1,14 @@
+# Downloaded third-party proxy jar (installed via install.py)
+mcp-proxy-all.jar
+*.part
+
+# Notas privadas - NUNCA hacer commit de esto
+marC_notas_privadas.md
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS
+.DS_Store
+Thumbs.db
