@@ -129,6 +129,33 @@ That's it. From then on, any Freebuff session can use the skill from any folder 
 
 > **Note:** `mcp-proxy-all.jar` is a third-party artifact (PortSwigger, GPL-3.0). This project does **not** redistribute it — it only downloads it from the official source. The skill tells the agent to run the bridge from `~/.burp-mcp/burp_mcp_bridge.py`, which looks for the jar right next to itself.
 
+## Uninstall
+
+Removing this bridge leaves **no residue**. The installer writes to exactly two places, so uninstalling is just deleting them:
+
+```bash
+# 1. Remove the bridge + proxy jar installed globally
+rm -rf ~/.burp-mcp
+
+# 2. Remove the global Freebuff skill
+rm -rf ~/.agents/skills/burp-mcp
+
+# 3. (Optional) delete the cloned repo folder itself
+#    cd ..  &&  rm -rf Burp-MCP-Bridge
+```
+
+That's it. The installer never touches your `PATH`, environment variables, the Windows registry, pip, npm (it doesn't install `freebuff` for you — that's a separate step), or Burp Suite itself.
+
+**What stays behind (on purpose):**
+
+- **Burp Suite** and its **MCP Server extension** — they are separate tools you manage from Burp's own Extensions tab. Removing the bridge does not remove them.
+- **Python and Java** — plain system requirements, not installed by this project.
+- **Other skills** you may have in `~/.agents/skills/` — only the `burp-mcp` subfolder is removed.
+- **Freebuff itself** — if you also want to uninstall the agent, that's a separate step: `npm uninstall -g freebuff`.
+
+> **Windows (cmd/PowerShell):** the bash commands above work in Git Bash. Equivalent in cmd:
+> `rmdir /s /q "%USERPROFILE%\.burp-mcp"` and `rmdir /s /q "%USERPROFILE%\.agents\skills\burp-mcp"`.
+
 ## Burp Suite setup
 
 1. In Burp Suite, install the **MCP Server** extension (BApp Store → "MCP Server").
