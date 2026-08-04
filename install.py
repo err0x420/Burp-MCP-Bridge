@@ -67,6 +67,13 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent
 BRIDGE_SRC = BASE_DIR / "burp_mcp_bridge.py"
 SKILL_TEMPLATE_SRC = BASE_DIR / "templates" / "burp-mcp" / "SKILL.md"
 PLACEHOLDER = "__BURP_MCP_BRIDGE__"
+# The exact Python interpreter that ran this installer (e.g. "python" on
+# Windows, "python3" on most Linux). Using the full resolved path guarantees
+# the skill's commands work on any OS and with any venv - even when the bare
+# name would not be found in PATH. Forward slashes keep it shell-safe.
+PYTHON_CMD = sys.executable.replace("\\", "/")
+# Marker replaced in the skill template (Python portability: see above).
+PYTHON_PLACEHOLDER = "__BURP_MCP_PYTHON__"
 
 
 def sha256_of(path):
@@ -115,7 +122,8 @@ def install_skill():
     template = SKILL_TEMPLATE_SRC.read_text(encoding="utf-8")
     # Forward slashes keep the path shell-safe on every OS (bash/cmd/PowerShell).
     bridge_path = str(BRIDGE_DST).replace("\\", "/")
-    skill = template.replace(PLACEHOLDER, bridge_path)
+    skill = template.replace(PYTHON_PLACEHOLDER, PYTHON_CMD)
+    skill = skill.replace(PLACEHOLDER, bridge_path)
     SKILL_DIR.mkdir(parents=True, exist_ok=True)
     SKILL_PATH.write_text(skill, encoding="utf-8")
     print(f"[+] Skill installed: {SKILL_PATH}", flush=True)

@@ -12,19 +12,19 @@ Para interactuar con su sesión, ejecuta el bridge (Python) indicado abajo.
 
 - Descubrir todo lo que Burp puede hacer (herramientas y parámetros):
   ```
-  python "__BURP_MCP_BRIDGE__" list-tools
+  "__BURP_MCP_PYTHON__" "__BURP_MCP_BRIDGE__" list-tools
   ```
 - Ejecutar una herramienta de Burp (los argumentos son JSON):
   ```
-  python "__BURP_MCP_BRIDGE__" call <tool_name> '<json>'
+  "__BURP_MCP_PYTHON__" "__BURP_MCP_BRIDGE__" call <tool_name> '<json>'
   ```
 
 ## Ejemplos
 
 ```
-python "__BURP_MCP_BRIDGE__" call get_proxy_http_history '{"count": 10, "offset": 0}'
-python "__BURP_MCP_BRIDGE__" call url_encode '{"content": "a b&c"}'
-python "__BURP_MCP_BRIDGE__" call send_http1_request '{"targetHostname":"example.com","targetPort":80,"usesHttps":false,"content":"GET / HTTP/1.1\r\nHost: example.com\r\n\r\n"}'
+"__BURP_MCP_PYTHON__" "__BURP_MCP_BRIDGE__" call get_proxy_http_history '{"count": 10, "offset": 0}'
+"__BURP_MCP_PYTHON__" "__BURP_MCP_BRIDGE__" call url_encode '{"content": "a b&c"}'
+"__BURP_MCP_PYTHON__" "__BURP_MCP_BRIDGE__" call send_http1_request '{"targetHostname":"example.com","targetPort":80,"usesHttps":false,"content":"GET / HTTP/1.1\r\nHost: example.com\r\n\r\n"}'
 ```
 
 ## Notas

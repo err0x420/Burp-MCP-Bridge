@@ -6,6 +6,8 @@ Bring the full power of **Burp Suite** into your **Freebuff** agent.
 
 No third-party Python packages required — only the standard library.
 
+> **🖥️ Cross-platform:** this project works on **Windows, macOS and Linux**. Where a command needs to differ by OS, this README labels it explicitly — e.g. `python` (Windows) vs `python3` (Linux/macOS). The installer writes the **exact interpreter and paths** into the skill automatically, so Freebuff works on any OS without manual tweaks.
+
 ## Quick start
 
 A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
@@ -16,6 +18,11 @@ A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
    ```bash
    git clone https://github.com/err0x420/Burp-MCP-Bridge
    cd Burp-MCP-Bridge
+
+   # Linux / macOS:
+   python3 install.py
+
+   # Windows (PowerShell, cmd or Git Bash):
    python install.py
    ```
    This downloads the official proxy jar (checksum-verified), installs the bridge + skill globally into `~/.burp-mcp/` and `~/.agents/skills/`, and **writes the correct path for your machine automatically**. That's it — nothing else to configure.
@@ -41,7 +48,7 @@ Once `python install.py` has run (see [Installation](#installation)), the **`bur
 2. Start Freebuff in **any** workspace folder (a bug bounty folder, your docs folder, …).
 3. Just ask, e.g. *"ayúdame con la sesión de Burp que tengo abierta"* or *"lista lo último del historial del proxy"*. The agent loads the skill and drives Burp through the bridge.
 
-Under the hood, the skill tells the agent to run:
+Under the hood, the skill tells the agent to run (simplified — the real skill contains the full resolved paths):
 
 ```bash
 # Discover what Burp can do
@@ -51,11 +58,11 @@ python ~/.burp-mcp/burp_mcp_bridge.py list-tools
 python ~/.burp-mcp/burp_mcp_bridge.py call send_http1_request '{"targetHostname": "example.com", "targetPort": 80, "usesHttps": false, "content": "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n"}'
 ```
 
-The skill actually contains the **full resolved path** (no `~` guessing) — the installer writes it automatically. Freebuff agents can chain these calls into full workflows — e.g. read the proxy history, craft a request, send it, create a Repeater tab, and check the response — all from the same session.
+The skill actually contains the **full resolved paths** — the exact Python interpreter (e.g. `python` on Windows, `python3` on Linux) and the exact bridge path (no `~` guessing) — the installer writes them automatically. Freebuff agents can chain these calls into full workflows — e.g. read the proxy history, craft a request, send it, create a Repeater tab, and check the response — all from the same session.
 
 ## CLI usage
 
-The commands below run the bridge script directly. If you have already run `python install.py`, the canonical copy lives at `~/.burp-mcp/burp_mcp_bridge.py` (together with the jar) and the `burp-mcp` skill uses that path automatically — so you can run `python ~/.burp-mcp/burp_mcp_bridge.py list-tools` from any folder. To run it from this repo folder instead, keep `mcp-proxy-all.jar` next to `burp_mcp_bridge.py`.
+The commands below run the bridge script directly. **Replace `python` with `python3` on Linux/macOS.** If you have already run the installer, the canonical copy lives at `~/.burp-mcp/burp_mcp_bridge.py` (together with the jar) and the `burp-mcp` skill uses that path automatically — so you can run `python ~/.burp-mcp/burp_mcp_bridge.py list-tools` from any folder (`~` expands in bash/Git Bash; on Windows **PowerShell** use `$HOME/.burp-mcp/...` or the full path). To run it from this repo folder instead, keep `mcp-proxy-all.jar` next to `burp_mcp_bridge.py`.
 
 ### List all available tools
 
@@ -112,6 +119,11 @@ One command is all it takes:
 ```bash
 git clone https://github.com/err0x420/Burp-MCP-Bridge
 cd Burp-MCP-Bridge
+
+# Linux / macOS:
+python3 install.py
+
+# Windows (PowerShell, cmd or Git Bash):
 python install.py
 ```
 
@@ -133,6 +145,8 @@ That's it. From then on, any Freebuff session can use the skill from any folder 
 
 Removing this bridge leaves **no residue**. The installer writes to exactly two places, so uninstalling is just deleting them:
 
+**Linux / macOS (bash):**
+
 ```bash
 # 1. Remove the bridge + proxy jar installed globally
 rm -rf ~/.burp-mcp
@@ -144,6 +158,34 @@ rm -rf ~/.agents/skills/burp-mcp
 #    cd ..  &&  rm -rf Burp-MCP-Bridge
 ```
 
+**Windows — Git Bash** (the same commands as Linux above work here, since Git Bash understands `~` and `rm -rf`).
+
+**Windows — PowerShell** (native):
+
+```powershell
+# 1. Remove the bridge + proxy jar installed globally
+Remove-Item -Recurse -Force "$HOME\.burp-mcp"
+
+# 2. Remove the global Freebuff skill
+Remove-Item -Recurse -Force "$HOME\.agents\skills\burp-mcp"
+
+# 3. (Optional) delete the cloned repo folder itself
+#    Set-Location .. ; Remove-Item -Recurse -Force .\Burp-MCP-Bridge
+```
+
+**Windows — cmd** (native):
+
+```cmd
+:: 1. Remove the bridge + proxy jar installed globally
+rmdir /s /q "%USERPROFILE%\.burp-mcp"
+
+:: 2. Remove the global Freebuff skill
+rmdir /s /q "%USERPROFILE%\.agents\skills\burp-mcp"
+
+:: 3. (Optional) delete the cloned repo folder itself
+::    cd .. && rmdir /s /q Burp-MCP-Bridge
+```
+
 That's it. The installer never touches your `PATH`, environment variables, the Windows registry, pip, npm (it doesn't install `freebuff` for you — that's a separate step), or Burp Suite itself.
 
 **What stays behind (on purpose):**
@@ -152,9 +194,6 @@ That's it. The installer never touches your `PATH`, environment variables, the W
 - **Python and Java** — plain system requirements, not installed by this project.
 - **Other skills** you may have in `~/.agents/skills/` — only the `burp-mcp` subfolder is removed.
 - **Freebuff itself** — if you also want to uninstall the agent, that's a separate step: `npm uninstall -g freebuff`.
-
-> **Windows (cmd/PowerShell):** the bash commands above work in Git Bash. Equivalent in cmd:
-> `rmdir /s /q "%USERPROFILE%\.burp-mcp"` and `rmdir /s /q "%USERPROFILE%\.agents\skills\burp-mcp"`.
 
 ## Burp Suite setup
 
