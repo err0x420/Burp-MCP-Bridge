@@ -204,6 +204,8 @@ That's it. The installer never touches your `PATH`, environment variables, the W
 
 ## Available tools
 
+> **Burp Suite edition:** with **Professional** you get access to all the tools this bridge exposes (27 in the verified version). With **Community**, you get only the ones your edition allows — Pro-only features like Scanner or Collaborator simply won't be available.
+
 The Burp MCP Server exposes tools for:
 
 - **HTTP** — `send_http1_request`, `send_http2_request`
