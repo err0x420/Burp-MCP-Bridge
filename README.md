@@ -141,6 +141,44 @@ That's it. From then on, any Freebuff session can use the skill from any folder 
 
 > **Note:** `mcp-proxy-all.jar` is a third-party artifact (PortSwigger, GPL-3.0). This project does **not** redistribute it — it only downloads it from the official source. The skill tells the agent to run the bridge from `~/.burp-mcp/burp_mcp_bridge.py`, which looks for the jar right next to itself.
 
+## Freebuff inside WSL2 (Kali) with Burp on Windows
+
+Running Freebuff inside **Kali (WSL2)** while Burp Suite lives on your **Windows host**? Same skill, one extra step. By default WSL2 uses a NAT network where `localhost` inside Kali does **not** reach Windows — but switching WSL2 to **mirrored networking mode** makes `127.0.0.1` work from Kali exactly as it does on Windows. The bridge then connects to your host's Burp with **zero changes**.
+
+1. **Install the bridge inside Kali as usual** (you need Python 3 and Java inside Kali, see [Requirements](#requirements)):
+
+   ```bash
+   git clone https://github.com/err0x420/Burp-MCP-Bridge
+   cd Burp-MCP-Bridge
+   python3 install.py
+   ```
+
+2. **Enable mirrored networking on Windows.** Open `C:\Users\<your-user>\.wslconfig` (create it if it doesn't exist) and add `networkingMode=mirrored` under `[wsl2]`, keeping any lines you already have — e.g.:
+
+   ```ini
+   [wsl2]
+   guiApplications=false
+   networkingMode=mirrored
+   ```
+
+3. **Restart WSL** — close all WSL windows, then in PowerShell (as admin):
+
+   ```powershell
+   wsl --shutdown
+   ```
+
+4. **Reopen Kali and verify** you can reach Burp's MCP server on the Windows host:
+
+   ```bash
+   curl http://127.0.0.1:9876
+   ```
+
+   A reply like `event: endpoint` / `data: ?sessionId=...` means the connection works.
+
+5. **Done.** Start Freebuff inside Kali from any folder and ask it to drive your Burp session — the skill talks straight to the Burp running on Windows.
+
+> **Note:** mirrored mode changes WSL2's whole networking stack (it also fixes common VPN issues). If you use Docker Desktop, double-check it still works after switching. You can always revert by deleting the line and running `wsl --shutdown` again.
+
 ## Uninstall
 
 Removing this bridge leaves **no residue**. The installer writes to exactly two places, so uninstalling is just deleting them:
