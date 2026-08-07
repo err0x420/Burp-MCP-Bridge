@@ -195,7 +195,13 @@ Running Freebuff inside **Kali (WSL2)** while Burp Suite lives on your **Windows
 
 5. **Done.** Start Freebuff inside Kali from any folder and ask it to drive your Burp session — the skill talks straight to the Burp running on Windows.
 
-> **Note:** mirrored mode changes WSL2's whole networking stack (it also fixes common VPN issues). If you use Docker Desktop, double-check it still works after switching. You can always revert by deleting the line and running `wsl --shutdown` again.
+> **⚠️ Warning — mirrored mode affects all your WSL setup:** it changes WSL2's entire networking stack and applies **globally to every WSL distro**, not just Kali. Before enabling it, be aware it can cause issues if you already use:
+>
+> - **Docker Desktop** — supported since v4.26 (and needs WSL ≥ 2.0.4); older versions break, and some setups hit port-binding conflicts (`address already in use`). Keep Docker Desktop updated and re-test after switching.
+> - **Corporate VPNs** (e.g. GlobalProtect, CheckPoint, chained VPNs) — usually *improved* by mirrored mode, but aggressive full-tunnel VPNs can occasionally leave WSL with **no network at all**.
+> - **Scripts or configs that rely on the old NAT IPs** (`wsl hostname -I`, `netsh portproxy`) — those no longer apply, since the VM stops having its own virtual IP.
+>
+> **Good news — it's fully reversible in 10 seconds.** Nothing is installed and no settings are stored permanently: just remove (or comment out) the `networkingMode=mirrored` line from `.wslconfig`, save the file, and run `wsl --shutdown` once. Your next WSL session is back to the default NAT networking, exactly as before.
 
 ## Uninstall
 
