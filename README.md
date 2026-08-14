@@ -12,7 +12,7 @@ No third-party Python packages required — only the standard library.
 
 A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
 
-1. **Install the tools** — [Python 3.8+](https://www.python.org/downloads/) and [Java 11+](https://www.oracle.com/java/technologies/downloads/). No `pip install` needed.
+1. **Install the requirements** — [Python 3.8+](https://www.python.org/downloads/) (to run the bridge and the installer), [Java 11+](https://www.oracle.com/java/technologies/downloads/) (to run the `mcp-proxy-all.jar` proxy), and [Node.js 18+](https://nodejs.org/) (to install the Freebuff agent). No `pip install` needed.
 2. **Install Freebuff** (if you don't have it): `npm install -g freebuff`
 3. **Install this bridge** — clone it, then run the installer for your OS:
 
