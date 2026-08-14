@@ -155,24 +155,6 @@ That's it. From then on, any Freebuff session can use the skill from any folder 
 
 > **Note:** `mcp-proxy-all.jar` is a third-party artifact (PortSwigger, GPL-3.0). This project does **not** redistribute it — it only downloads it from the official source. The skill tells the agent to run the bridge from `~/.burp-mcp/burp_mcp_bridge.py`, which looks for the jar right next to itself.
 
-## How to use it
-
-Once installed, using it is just a conversation:
-
-1. Make sure **Burp Suite** is running with the MCP Server extension enabled.
-2. Start **Freebuff** in any folder — if it was already open when you ran `install.py`, restart it once so it picks up the new skill.
-3. Tell it what you want to do with Burp, for example:
-
-   > *"use the burp-mcp skill: list Burp's tools"*
-
-   The agent loads the skill, connects to your Burp session and answers with everything it can do. From there you just keep asking naturally:
-
-   - *"use the burp-mcp skill: send a GET request to https://example.com"*
-   - *"use the burp-mcp skill: create a Repeater tab with this request"*
-   - *"use the burp-mcp skill: show the last 10 proxy history entries"*
-
-No paths, no config, no per-project setup — it works from **any** workspace folder. See [Using it with Freebuff](#using-it-with-freebuff) for what happens under the hood.
-
 ## Freebuff inside WSL2 (Kali) with Burp on Windows
 
 Running Freebuff inside **Kali (WSL2)** while Burp Suite lives on your **Windows host**? Same skill, one extra step. By default WSL2 uses a NAT network where `localhost` inside Kali does **not** reach Windows — but switching WSL2 to **mirrored networking mode** makes `127.0.0.1` work from Kali exactly as it does on Windows. The bridge then connects to your host's Burp with **zero changes**.
@@ -216,6 +198,24 @@ Running Freebuff inside **Kali (WSL2)** while Burp Suite lives on your **Windows
 > - **Scripts or configs that rely on the old NAT IPs** (`wsl hostname -I`, `netsh portproxy`) — those no longer apply, since the VM stops having its own virtual IP.
 >
 > **Good news — it's fully reversible in 10 seconds.** Nothing is installed and no settings are stored permanently: just remove (or comment out) the `networkingMode=mirrored` line from `.wslconfig`, save the file, and run `wsl --shutdown` once. Your next WSL session is back to the default NAT networking, exactly as before.
+
+## How to use it
+
+Once installed, using it is just a conversation:
+
+1. Make sure **Burp Suite** is running with the MCP Server extension enabled.
+2. Start **Freebuff** in any folder — if it was already open when you ran `install.py`, restart it once so it picks up the new skill.
+3. Tell it what you want to do with Burp, for example:
+
+   > *"use the burp-mcp skill: list Burp's tools"*
+
+   The agent loads the skill, connects to your Burp session and answers with everything it can do. From there you just keep asking naturally:
+
+   - *"use the burp-mcp skill: send a GET request to https://example.com"*
+   - *"use the burp-mcp skill: create a Repeater tab with this request"*
+   - *"use the burp-mcp skill: show the last 10 proxy history entries"*
+
+No paths, no config, no per-project setup — it works from **any** workspace folder. See [Using it with Freebuff](#using-it-with-freebuff) for what happens under the hood.
 
 ## Uninstall
 
