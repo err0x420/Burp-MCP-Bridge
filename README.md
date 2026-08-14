@@ -17,6 +17,13 @@ There are already many "Burp MCP bridges" on GitHub, but none of them were made 
 - Works from **any install location** — no hardcoded paths, no usernames in the code, no matter where you put the folder.
 - Cross-platform (Windows, macOS, Linux) as long as **Java** and **Python 3** are available.
 
+## Requirements
+
+- **Python 3** (3.8+; no `pip install` needed)
+- **Java** 11+ available in your `PATH` (to run `mcp-proxy-all.jar`)
+- **Node.js** 18+ (with `npm`) — to install the Freebuff agent: `npm install -g freebuff`
+- **Burp Suite** (Community or Professional) with the **MCP Server** extension installed and running
+
 ## Quick start
 
 A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
@@ -48,79 +55,6 @@ A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
 
 > **Important:** if Freebuff was already open when you ran `install.py`, **close it and start a new session** — skills are loaded at startup.
 
-## Using it with Freebuff
-
-Once `python install.py` has run (see [Installation](#installation)), the **`burp-mcp` skill is installed globally** (`~/.agents/skills/burp-mcp/SKILL.md`), so **any** Freebuff session in **any** workspace folder can drive your Burp Suite automatically — no per-project setup, no paths to type.
-
-1. Make sure Burp Suite is running with the MCP Server extension enabled (see [Burp Suite setup](#burp-suite-setup)).
-2. Start Freebuff in **any** workspace folder (a bug bounty folder, your docs folder, …).
-3. Just ask, e.g. *"help me with the Burp session I have open"* or *"list the latest entries from the proxy history"*. The agent loads the skill and drives Burp through the bridge.
-
-Under the hood, the skill tells the agent to run (simplified — the real skill contains the full resolved paths):
-
-```bash
-# Discover what Burp can do
-python ~/.burp-mcp/burp_mcp_bridge.py list-tools
-
-# Perform actions in Burp
-python ~/.burp-mcp/burp_mcp_bridge.py call send_http1_request '{"targetHostname": "example.com", "targetPort": 80, "usesHttps": false, "content": "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n"}'
-```
-
-The skill actually contains the **full resolved paths** — the exact Python interpreter (e.g. `python` on Windows, `python3` on Linux) and the exact bridge path (no `~` guessing) — the installer writes them automatically. Freebuff agents can chain these calls into full workflows — e.g. read the proxy history, craft a request, send it, create a Repeater tab, and check the response — all from the same session.
-
-## CLI usage
-
-The commands below run the bridge script directly. **Replace `python` with `python3` on Linux/macOS.** If you have already run the installer, the canonical copy lives at `~/.burp-mcp/burp_mcp_bridge.py` (together with the jar) and the `burp-mcp` skill uses that path automatically — so you can run `python ~/.burp-mcp/burp_mcp_bridge.py list-tools` from any folder (`~` expands in bash/Git Bash; on Windows **PowerShell** use `$HOME/.burp-mcp/...` or the full path). To run it from this repo folder instead, keep `mcp-proxy-all.jar` next to `burp_mcp_bridge.py`.
-
-### List all available tools
-
-```bash
-python burp_mcp_bridge.py list-tools
-```
-
-This is also the default action:
-
-```bash
-python burp_mcp_bridge.py
-```
-
-### Call a tool
-
-```bash
-python burp_mcp_bridge.py call <tool_name> [arguments_json]
-```
-
-More examples:
-
-```bash
-python burp_mcp_bridge.py call url_encode '{"content": "a b&c"}'
-
-python burp_mcp_bridge.py call base64_decode '{"content": "aGVsbG8="}'
-
-python burp_mcp_bridge.py call get_proxy_http_history '{"count": 10, "offset": 0}'
-```
-
-## How it works
-
-```
-Freebuff agent ──> burp_mcp_bridge.py (Python MCP client)
-                          │  NDJSON over stdin/stdout
-                          ▼
-              mcp-proxy-all.jar (Java proxy)
-                          │  SSE over HTTP
-                          ▼
-               Burp Suite MCP Server (http://127.0.0.1:9876)
-```
-
-The bridge launches the proxy with `java -jar`, speaks NDJSON (newline-delimited JSON) to it, and relays requests to Burp's MCP Server over SSE.
-
-## Requirements
-
-- **Python 3** (3.8+; no `pip install` needed)
-- **Java** 11+ available in your `PATH` (to run `mcp-proxy-all.jar`)
-- **Node.js** 18+ (with `npm`) — to install the Freebuff agent: `npm install -g freebuff`
-- **Burp Suite** (Community or Professional) with the **MCP Server** extension installed and running
-
 ## Installation
 
 Installation is simple — clone the repository, then run the installer for your OS:
@@ -148,7 +82,7 @@ python install.py
 2. **Installs** the bridge + proxy into `~/.burp-mcp/` (your home directory — resolved automatically by Python, works on Windows, macOS and Linux).
 3. **Installs the global skill** `burp-mcp` into `~/.agents/skills/burp-mcp/SKILL.md`, with the resolved path already written inside — no paths to type, nothing to configure.
 
-That's it. From then on, any Freebuff session can use the skill from any folder — see [Using it with Freebuff](#using-it-with-freebuff).
+That's it. From then on, any Freebuff session can use the skill from any folder — see [Usage](#usage).
 
 > **Tip:** if Freebuff was already running when you ran the installer, restart it once so it picks up the new skill.
 
@@ -207,11 +141,13 @@ Running Freebuff inside **Kali (WSL2)** while Burp Suite lives on your **Windows
 >
 > **Good news — it's fully reversible in 10 seconds.** Nothing is installed and no settings are stored permanently: just remove (or comment out) the `networkingMode=mirrored` line from `.wslconfig`, save the file, and run `wsl --shutdown` once. Your next WSL session is back to the default NAT networking, exactly as before.
 
-## How to use it
+## Usage
 
-Once installed, using it is just a conversation:
+Once `python install.py` has run (see [Installation](#installation)), the **`burp-mcp` skill is installed globally** (`~/.agents/skills/burp-mcp/SKILL.md`), so **any** Freebuff session in **any** workspace folder can drive your Burp Suite automatically — no per-project setup, no paths to type.
 
-1. Make sure **Burp Suite** is running with the MCP Server extension enabled.
+Using it is just a conversation:
+
+1. Make sure **Burp Suite** is running with the MCP Server extension enabled (see [Burp Suite setup](#burp-suite-setup)).
 2. Start **Freebuff** in any folder — if it was already open when you ran `install.py`, restart it once so it picks up the new skill.
 3. Tell it what you want to do with Burp, for example:
 
@@ -223,7 +159,99 @@ Once installed, using it is just a conversation:
    - *"use the burp-mcp skill: create a Repeater tab with this request"*
    - *"use the burp-mcp skill: show the last 10 proxy history entries"*
 
-No paths, no config, no per-project setup — it works from **any** workspace folder. See [Using it with Freebuff](#using-it-with-freebuff) for what happens under the hood.
+Under the hood, the skill tells the agent to run (simplified — the real skill contains the full resolved paths):
+
+```bash
+# Discover what Burp can do
+python ~/.burp-mcp/burp_mcp_bridge.py list-tools
+
+# Perform actions in Burp
+python ~/.burp-mcp/burp_mcp_bridge.py call send_http1_request '{"targetHostname": "example.com", "targetPort": 80, "usesHttps": false, "content": "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n"}'
+```
+
+The skill actually contains the **full resolved paths** — the exact Python interpreter (e.g. `python` on Windows, `python3` on Linux) and the exact bridge path (no `~` guessing) — the installer writes them automatically. Freebuff agents can chain these calls into full workflows — e.g. read the proxy history, craft a request, send it, create a Repeater tab, and check the response — all from the same session.
+
+## Burp Suite setup
+
+1. In Burp Suite, install the **MCP Server** extension (BApp Store → "MCP Server").
+2. Make sure the extension is running and listening on `http://127.0.0.1:9876`.
+
+> **Note:** by default the MCP server has **no authentication configured** and only listens on localhost. Do not expose port `9876` to other networks.
+
+## Available tools
+
+> **Burp Suite edition:** with **Professional** you get access to all the tools this bridge exposes (27 in the verified version). With **Community**, you get only the ones your edition allows — Pro-only features like Scanner or Collaborator simply won't be available.
+
+The Burp MCP Server exposes tools for:
+
+- **HTTP** — `send_http1_request`, `send_http2_request`
+- **Repeater** — `create_repeater_tab`, `create_repeater_tab_http2`
+- **Intruder** — `send_to_intruder`
+- **Encoding helpers** — `url_encode`, `url_decode`, `base64_encode`, `base64_decode`, `generate_random_string`
+- **Configuration** — `output_project_options`, `set_project_options`, `output_user_options`, `set_user_options`
+- **Scanner** — `get_scanner_issues`
+- **Collaborator (OOB testing)** — `generate_collaborator_payload`, `get_collaborator_interactions`
+- **History** — `get_proxy_http_history`, `get_proxy_http_history_regex`, `get_proxy_websocket_history`, `get_proxy_websocket_history_regex`, `get_organizer_items`, `get_organizer_items_regex`
+- **Control** — `set_task_execution_engine_state`, `set_proxy_intercept_state`
+- **Editor** — `get_active_editor_contents`, `set_active_editor_contents`
+
+Run `list-tools` to see every tool with its full parameter schema (the exact set depends on your MCP Server extension version — this bridge was verified against v1.1.2 with 27 tools).
+
+## CLI usage
+
+The commands below run the bridge script directly. **Replace `python` with `python3` on Linux/macOS.** If you have already run the installer, the canonical copy lives at `~/.burp-mcp/burp_mcp_bridge.py` (together with the jar) and the `burp-mcp` skill uses that path automatically — so you can run `python ~/.burp-mcp/burp_mcp_bridge.py list-tools` from any folder (`~` expands in bash/Git Bash; on Windows **PowerShell** use `$HOME/.burp-mcp/...` or the full path). To run it from this repo folder instead, keep `mcp-proxy-all.jar` next to `burp_mcp_bridge.py`.
+
+### List all available tools
+
+```bash
+python burp_mcp_bridge.py list-tools
+```
+
+This is also the default action:
+
+```bash
+python burp_mcp_bridge.py
+```
+
+### Call a tool
+
+```bash
+python burp_mcp_bridge.py call <tool_name> [arguments_json]
+```
+
+More examples:
+
+```bash
+python burp_mcp_bridge.py call url_encode '{"content": "a b&c"}'
+
+python burp_mcp_bridge.py call base64_decode '{"content": "aGVsbG8="}'
+
+python burp_mcp_bridge.py call get_proxy_http_history '{"count": 10, "offset": 0}'
+```
+
+## How it works
+
+```
+Freebuff agent ──> burp_mcp_bridge.py (Python MCP client)
+                          │  NDJSON over stdin/stdout
+                          ▼
+              mcp-proxy-all.jar (Java proxy)
+                          │  SSE over HTTP
+                          ▼
+               Burp Suite MCP Server (http://127.0.0.1:9876)
+```
+
+The bridge launches the proxy with `java -jar`, speaks NDJSON (newline-delimited JSON) to it, and relays requests to Burp's MCP Server over SSE.
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| `[!] mcp-proxy-all.jar not found next to this script` | Run `python install.py` once, or make sure `mcp-proxy-all.jar` is next to `burp_mcp_bridge.py` |
+| The agent doesn't find the `burp-mcp` skill | Re-run `python install.py` — it (re)installs the skill into `~/.agents/skills/burp-mcp/SKILL.md` |
+| `Timeout waiting for SSE connection` | Burp Suite must be running with the MCP Server extension enabled on `127.0.0.1:9876` |
+| `[Errno 2] No such file or directory: 'java'` | Install Java and make sure `java` is in your `PATH` |
+| `[!] Cannot connect to Burp MCP` | Check that the Burp MCP Server extension is actually running |
 
 ## Uninstall
 
@@ -278,42 +306,6 @@ That's it. The installer never touches your `PATH`, environment variables, the W
 - **Python and Java** — plain system requirements, not installed by this project.
 - **Other skills** you may have in `~/.agents/skills/` — only the `burp-mcp` subfolder is removed.
 - **Freebuff itself** — if you also want to uninstall the agent, that's a separate step: `npm uninstall -g freebuff`.
-
-## Burp Suite setup
-
-1. In Burp Suite, install the **MCP Server** extension (BApp Store → "MCP Server").
-2. Make sure the extension is running and listening on `http://127.0.0.1:9876`.
-
-> **Note:** by default the MCP server has **no authentication configured** and only listens on localhost. Do not expose port `9876` to other networks.
-
-## Available tools
-
-> **Burp Suite edition:** with **Professional** you get access to all the tools this bridge exposes (27 in the verified version). With **Community**, you get only the ones your edition allows — Pro-only features like Scanner or Collaborator simply won't be available.
-
-The Burp MCP Server exposes tools for:
-
-- **HTTP** — `send_http1_request`, `send_http2_request`
-- **Repeater** — `create_repeater_tab`, `create_repeater_tab_http2`
-- **Intruder** — `send_to_intruder`
-- **Encoding helpers** — `url_encode`, `url_decode`, `base64_encode`, `base64_decode`, `generate_random_string`
-- **Configuration** — `output_project_options`, `set_project_options`, `output_user_options`, `set_user_options`
-- **Scanner** — `get_scanner_issues`
-- **Collaborator (OOB testing)** — `generate_collaborator_payload`, `get_collaborator_interactions`
-- **History** — `get_proxy_http_history`, `get_proxy_http_history_regex`, `get_proxy_websocket_history`, `get_proxy_websocket_history_regex`, `get_organizer_items`, `get_organizer_items_regex`
-- **Control** — `set_task_execution_engine_state`, `set_proxy_intercept_state`
-- **Editor** — `get_active_editor_contents`, `set_active_editor_contents`
-
-Run `list-tools` to see every tool with its full parameter schema (the exact set depends on your MCP Server extension version — this bridge was verified against v1.1.2 with 27 tools).
-
-## Troubleshooting
-
-| Symptom | Fix |
-|---|---|
-| `[!] mcp-proxy-all.jar not found next to this script` | Run `python install.py` once, or make sure `mcp-proxy-all.jar` is next to `burp_mcp_bridge.py` |
-| The agent doesn't find the `burp-mcp` skill | Re-run `python install.py` — it (re)installs the skill into `~/.agents/skills/burp-mcp/SKILL.md` |
-| `Timeout waiting for SSE connection` | Burp Suite must be running with the MCP Server extension enabled on `127.0.0.1:9876` |
-| `[Errno 2] No such file or directory: 'java'` | Install Java and make sure `java` is in your `PATH` |
-| `[!] Cannot connect to Burp MCP` | Check that the Burp MCP Server extension is actually running |
 
 ## Security notes
 
