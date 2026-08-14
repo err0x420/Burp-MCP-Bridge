@@ -12,19 +12,27 @@ No third-party Python packages required — only the standard library.
 
 A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
 
-1. **Install the tools** — [Python 3](https://www.python.org/downloads/) and [Java 11+](https://www.oracle.com/java/technologies/downloads/). No `pip install` needed.
+1. **Install the tools** — [Python 3.8+](https://www.python.org/downloads/) and [Java 11+](https://www.oracle.com/java/technologies/downloads/). No `pip install` needed.
 2. **Install Freebuff** (if you don't have it): `npm install -g freebuff`
-3. **Install this bridge** — clone and run the one-command installer:
+3. **Install this bridge** — clone it, then run the installer for your OS:
+
    ```bash
    git clone https://github.com/err0x420/Burp-MCP-Bridge
    cd Burp-MCP-Bridge
+   ```
 
-   # Linux / macOS:
+   **Linux / macOS:**
+
+   ```bash
    python3 install.py
+   ```
 
-   # Windows (PowerShell, cmd or Git Bash):
+   **Windows (PowerShell, cmd or Git Bash):**
+
+   ```powershell
    python install.py
    ```
+
    This downloads the official proxy jar (checksum-verified), installs the bridge + skill globally into `~/.burp-mcp/` and `~/.agents/skills/`, and **writes the correct path for your machine automatically**. That's it — nothing else to configure.
 4. **Open Burp Suite** with the MCP Server extension running (see [Burp Suite setup](#burp-suite-setup)).
 5. **Start Freebuff in any folder** (your bug bounty folder, your docs, anywhere) and simply ask, e.g.: *"ayúdame con la sesión de Burp que tengo abierta"*. The agent loads the `burp-mcp` skill and drives Burp for you.
@@ -36,7 +44,7 @@ A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
 There are already many "Burp MCP bridges" on GitHub, but none of them were made with Freebuff in mind. This one is built specifically for Freebuff users:
 
 - A minimal, dependency-free **Python** bridge you can drop anywhere.
-- **One-command setup** that installs the bridge and a **global skill**, so it works from any Freebuff workspace without per-project configuration.
+- **Effortless setup** that installs the bridge and a **global skill**, so it works from any Freebuff workspace without per-project configuration.
 - Works from **any install location** — no hardcoded paths, no usernames in the code, no matter where you put the folder.
 - Cross-platform (Windows, macOS, Linux) as long as **Java** and **Python 3** are available.
 
@@ -114,16 +122,22 @@ The bridge launches the proxy with `java -jar`, speaks NDJSON (newline-delimited
 
 ## Installation
 
-One command is all it takes:
+Installation is simple — clone the repository, then run the installer for your OS:
 
 ```bash
 git clone https://github.com/err0x420/Burp-MCP-Bridge
 cd Burp-MCP-Bridge
+```
 
-# Linux / macOS:
+**Linux / macOS:**
+
+```bash
 python3 install.py
+```
 
-# Windows (PowerShell, cmd or Git Bash):
+**Windows (PowerShell, cmd or Git Bash):**
+
+```powershell
 python install.py
 ```
 
