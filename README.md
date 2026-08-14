@@ -167,7 +167,14 @@ Running Freebuff inside **Kali (WSL2)** while Burp Suite lives on your **Windows
    python3 install.py
    ```
 
-2. **Enable mirrored networking on Windows.** Open `C:\Users\<your-user>\.wslconfig` (create it if it doesn't exist) and add `networkingMode=mirrored` under `[wsl2]`, keeping any lines you already have — e.g.:
+2. **Enable mirrored networking on Windows.** Open `C:\Users\<your-user>\.wslconfig` (create it if it doesn't exist) and add `networkingMode=mirrored` under `[wsl2]`:
+
+   ```ini
+   [wsl2]
+   networkingMode=mirrored
+   ```
+
+   If the file already exists with other settings, keep them and just add the new line at the bottom — e.g.:
 
    ```ini
    [wsl2]
