@@ -44,7 +44,7 @@ A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
 
    This downloads the official proxy jar (checksum-verified), installs the bridge + skill globally into `~/.burp-mcp/` and `~/.agents/skills/`, and **writes the correct path for your machine automatically**. That's it — nothing else to configure.
 4. **Open Burp Suite** with the MCP Server extension running (see [Burp Suite setup](#burp-suite-setup)).
-5. **Start Freebuff in any folder** (your bug bounty folder, your docs, anywhere) and simply ask, e.g.: *"ayúdame con la sesión de Burp que tengo abierta"*. The agent loads the `burp-mcp` skill and drives Burp for you.
+5. **Start Freebuff in any folder** (your bug bounty folder, your docs, anywhere) and simply ask, e.g.: *"help me with the Burp session I have open"*. The agent loads the `burp-mcp` skill and drives Burp for you.
 
 > **Important:** if Freebuff was already open when you ran `install.py`, **close it and start a new session** — skills are loaded at startup.
 
@@ -54,7 +54,7 @@ Once `python install.py` has run (see [Installation](#installation)), the **`bur
 
 1. Make sure Burp Suite is running with the MCP Server extension enabled (see [Burp Suite setup](#burp-suite-setup)).
 2. Start Freebuff in **any** workspace folder (a bug bounty folder, your docs folder, …).
-3. Just ask, e.g. *"ayúdame con la sesión de Burp que tengo abierta"* or *"lista lo último del historial del proxy"*. The agent loads the skill and drives Burp through the bridge.
+3. Just ask, e.g. *"help me with the Burp session I have open"* or *"list the latest entries from the proxy history"*. The agent loads the skill and drives Burp through the bridge.
 
 Under the hood, the skill tells the agent to run (simplified — the real skill contains the full resolved paths):
 
