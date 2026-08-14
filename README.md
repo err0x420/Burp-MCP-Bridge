@@ -118,6 +118,7 @@ The bridge launches the proxy with `java -jar`, speaks NDJSON (newline-delimited
 
 - **Python 3** (3.8+; no `pip install` needed)
 - **Java** 11+ available in your `PATH` (to run `mcp-proxy-all.jar`)
+- **Node.js** 18+ (with `npm`) — to install the Freebuff agent: `npm install -g freebuff`
 - **Burp Suite** (Community or Professional) with the **MCP Server** extension installed and running
 
 ## Installation
