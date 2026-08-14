@@ -8,6 +8,15 @@ No third-party Python packages required — only the standard library.
 
 > **🖥️ Cross-platform:** this project works on **Windows, macOS and Linux**. Where a command needs to differ by OS, this README labels it explicitly — e.g. `python` (Windows) vs `python3` (Linux/macOS). The installer writes the **exact interpreter and paths** into the skill automatically, so Freebuff works on any OS without manual tweaks.
 
+## Why this project exists
+
+There are already many "Burp MCP bridges" on GitHub, but none of them were made with Freebuff in mind. This one is built specifically for Freebuff users:
+
+- A minimal, dependency-free **Python** bridge you can drop anywhere.
+- **Effortless setup** that installs the bridge and a **global skill**, so it works from any Freebuff workspace without per-project configuration.
+- Works from **any install location** — no hardcoded paths, no usernames in the code, no matter where you put the folder.
+- Cross-platform (Windows, macOS, Linux) as long as **Java** and **Python 3** are available.
+
 ## Quick start
 
 A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
@@ -38,15 +47,6 @@ A new user gets from zero to "Freebuff driving Burp" in 5 minutes:
 5. **Start Freebuff in any folder** (your bug bounty folder, your docs, anywhere) and simply ask, e.g.: *"ayúdame con la sesión de Burp que tengo abierta"*. The agent loads the `burp-mcp` skill and drives Burp for you.
 
 > **Important:** if Freebuff was already open when you ran `install.py`, **close it and start a new session** — skills are loaded at startup.
-
-## Why this project exists
-
-There are already many "Burp MCP bridges" on GitHub, but none of them were made with Freebuff in mind. This one is built specifically for Freebuff users:
-
-- A minimal, dependency-free **Python** bridge you can drop anywhere.
-- **Effortless setup** that installs the bridge and a **global skill**, so it works from any Freebuff workspace without per-project configuration.
-- Works from **any install location** — no hardcoded paths, no usernames in the code, no matter where you put the folder.
-- Cross-platform (Windows, macOS, Linux) as long as **Java** and **Python 3** are available.
 
 ## Using it with Freebuff
 
